@@ -1,123 +1,116 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - GADIS QS HQ</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GADIS QS HQ Dashboard</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="/ganjaran/manifest.json">
+<meta name="theme-color" content="#d4af37">
 
-  <!-- PWA manifest -->
-  <link rel="manifest" href="/ganjaran/manifest.json">
-
-  <!-- Icons -->
-  <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icon/icon-512.png">
-
-  <!-- JS -->
-  <script src="js/config.js" defer></script>
-  <script src="js/dashboard.js" defer></script>
-  <script src="js/api.js" defer></script>
-  <script src="js/auth.js" defer></script>
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#fff0f5;
+  text-align:center;
+}
+header{
+  background:#d4af37;
+  color:white;
+  padding:20px;
+  font-size:20px;
+  font-weight:bold;
+}
+.card{
+  margin:30px auto;
+  padding:20px;
+  width:90%;
+  max-width:500px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+button{
+  padding:10px 20px;
+  background:#d4af37;
+  border:none;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
+button:hover{
+  opacity:0.9;
+}
+#blurScreen{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  opacity:0;
+  pointer-events:none;
+  transition:0.3s;
+  z-index:9999;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>GADIS QS HQ</h1>
-    <p>Dashboard Ultra Premium</p>
-  </header>
 
-  <!-- Live Stats -->
-  <section id="live-stats" class="card-premium">
-    <h2>📊 Live Stats</h2>
-    <div id="stats-content">Loading...</div>
-  </section>
+<header>GADIS QS HQ – Admin Dashboard</header>
 
-  <!-- Heatmap -->
-  <section id="heatmap" class="card-premium">
-    <h2>🌍 Heatmap Bandar</h2>
-    <div id="heatmap-map" style="height:300px;"></div>
-  </section>
+<div class="card">
+  <h3>ULTRA ENTERPRISE SYSTEM</h3>
+  <p>Status Sistem: <b style="color:green;">AKTIF</b></p>
+  <button onclick="alert('Sistem Berfungsi Normal')">Semak Sistem</button>
+</div>
 
-  <!-- Top 5 Bandar -->
-  <section id="top5" class="card-premium">
-    <h2>🏆 Top 5 Bandar</h2>
-    <ol id="top5-list">Loading...</ol>
-  </section>
+<div id="blurScreen"></div>
 
-  <!-- LED Stage Mode -->
-  <section id="led-stage" class="card-premium">
-    <h2>💡 LED Stage Mode</h2>
-    <div id="led-display">Memaparkan animasi LED...</div>
-  </section>
-
-  <!-- Confetti -->
-  <canvas id="confetti-canvas"></canvas>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2026 GADIS QS HQ</p>
-  </footer>
-
-  <!-- JS Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
-
-  <script>
+<script>
+/* ===============================
+   SERVICE WORKER REGISTER
+=============================== */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/ganjaran/service-worker.js')
-    .then(() => console.log("SW Registered"))
-    .catch(err => console.log("SW Error:", err));
+  .then(()=>console.log("SW Ready"))
+  .catch(err=>console.log("SW Error:", err));
 }
- 
-    // Confetti function
-    function triggerConfetti() {
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#ff99cc','#d4af37','#fff0f5']
-      });
-    }
 
-    // Badge warna
-    function updateStatusBadge(status) {
-      const badge = document.createElement('span');
-      badge.classList.add('btn-premium');
-      if(status === 'TELAH DITEBUS') badge.style.backgroundColor = '#d4af37';
-      else if(status === 'BELUM DITEBUS') badge.style.backgroundColor = '#28a745';
-      else badge.style.backgroundColor = '#dc3545';
-      badge.innerText = status;
-      return badge;
-    }
+/* ===============================
+   ANTI SCREENSHOT + ANTI INSPECT
+=============================== */
 
-    // Simulasi live stats + heatmap
-    document.addEventListener('DOMContentLoaded', () => {
-      // Live Stats
-      const stats = document.getElementById('stats-content');
-      stats.innerHTML = `
-        <p>Jumlah Kod Sah: 120</p>
-        <p>Jumlah Kod Telah Ditebus: 85</p>
-        <p>Jumlah Kod Belum Ditebus: 35</p>
-      `;
+document.addEventListener("keydown", function(e){
+  if(e.key === "PrintScreen"){
+    navigator.clipboard.writeText("Screenshot Disabled");
+    alert("Screenshot Tidak Dibenarkan");
+  }
+  if(e.ctrlKey && (e.key === "u" || e.key === "U")){
+    e.preventDefault();
+  }
+  if(e.ctrlKey && e.shiftKey && e.key === "I"){
+    e.preventDefault();
+  }
+});
 
-      // Top 5 Bandar
-      const top5List = document.getElementById('top5-list');
-      const top5 = ['Kuala Lumpur','Johor Bahru','Penang','Ipoh','Kota Bharu'];
-      top5List.innerHTML = '';
-      top5.forEach(b => {
-        const li = document.createElement('li');
-        li.innerText = b;
-        top5List.appendChild(li);
-      });
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden){
+    document.getElementById("blurScreen").style.opacity="1";
+  }else{
+    document.getElementById("blurScreen").style.opacity="0";
+  }
+});
 
-      // Heatmap placeholder
-      const map = document.getElementById('heatmap-map');
-      map.innerHTML = '<p style="text-align:center; padding-top:120px;">[Heatmap Bandar akan dipaparkan di sini]</p>';
+setInterval(function(){
+  if(window.outerWidth - window.innerWidth > 100){
+    document.body.innerHTML="";
+  }
+},1000);
 
-      // LED Stage placeholder
-      const led = document.getElementById('led-display');
-      led.innerHTML = '<p style="text-align:center;">Animasi LED aktif</p>';
-    });
-  </script>
+</script>
+
 </body>
 </html>
