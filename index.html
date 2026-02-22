@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GADIS QS HQ - Dashboard Ultra Premium</title>
+
+  <!-- Theme & Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+
+  <!-- JS -->
+  <script src="js/config.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/auth.js" defer></script>
+
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>GADIS QS HQ</h1>
+    <p>Dashboard Ultra Premium</p>
+  </header>
+
+  <!-- Live Stats -->
+  <section id="live-stats" class="card-premium">
+    <h2>📊 Live Stats</h2>
+    <div id="stats-content">
+      Loading...
+    </div>
+  </section>
+
+  <!-- Heatmap -->
+  <section id="heatmap" class="card-premium">
+    <h2>🌍 Heatmap Bandar</h2>
+    <div id="heatmap-map"></div>
+  </section>
+
+  <!-- Top 5 Bandar -->
+  <section id="top5" class="card-premium">
+    <h2>🏆 Top 5 Bandar</h2>
+    <ol id="top5-list">
+      Loading...
+    </ol>
+  </section>
+
+  <!-- LED Stage Mode -->
+  <section id="led-stage" class="card-premium">
+    <h2>💡 LED Stage Mode</h2>
+    <div id="led-display">Memaparkan animasi LED...</div>
+  </section>
+
+  <!-- Confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 GADIS QS HQ</p>
+  </footer>
+
+  <!-- Confetti & Badge Script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+
+  <script>
+    // Service Worker register untuk PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker terdaftar:', reg.scope))
+          .catch(err => console.log('Service Worker gagal:', err));
+      });
+    }
+
+    // Badge warna auto (contoh)
+    function updateStatusBadge(status) {
+      const badge = document.createElement('span');
+      badge.classList.add('btn-premium');
+      if(status === 'TELAH DITEBUS') badge.style.backgroundColor = '#d4af37'; // emas
+      else if(status === 'BELUM DITEBUS') badge.style.backgroundColor = '#28a745'; // hijau
+      else badge.style.backgroundColor = '#dc3545'; // merah
+      badge.innerText = status;
+      return badge;
+    }
+
+    // Confetti trigger example
+    function triggerConfetti() {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ff99cc','#d4af37','#fff0f5']
+      });
+    }
+  </script>
+</body>
+</html>

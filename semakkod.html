@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semak Kod - GADIS QS HQ</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+
+  <!-- JS -->
+  <script src="js/config.js" defer></script>
+  <script src="js/semakkod.js" defer></script>
+  <script src="js/api.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>GADIS QS HQ</h1>
+    <p>Semak Kod & Tebus Ganjaran</p>
+  </header>
+
+  <!-- QR Scanner -->
+  <section class="card-premium">
+    <h2>📷 Imbas QR Kod</h2>
+    <div id="qr-reader" style="display:none;"></div>
+    <button onclick="startScanner()" class="btn-premium">Scan QR</button>
+  </section>
+
+  <!-- Manual Input -->
+  <section class="card-premium">
+    <h2>📝 Masukkan Kod Manual</h2>
+    <input type="text" id="kodInput" placeholder="Masukkan kod siri" class="input-premium">
+    <button onclick="semakKod()" class="btn-premium">Semak Kod</button>
+  </section>
+
+  <!-- Result -->
+  <section class="card-premium" id="result-section">
+    <h2>Hasil Semakan</h2>
+    <div id="result" class="result-card">
+      Tiada hasil setakat ini
+    </div>
+    <a id="btnSijil" href="#" target="_blank" class="btn-premium" style="display:none;">📄 Muat Turun Sijil</a>
+  </section>
+
+  <!-- Confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <footer>
+    <p>&copy; 2026 GADIS QS HQ</p>
+  </footer>
+
+  <!-- JS Libraries -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+
+  <script>
+    // Service Worker register
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered:', reg.scope))
+          .catch(err => console.log('Service Worker failed:', err));
+      });
+    }
+
+    // Tombol sijil nanti akan diisi oleh semakkod.js
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnSijil = document.getElementById('btnSijil');
+      // akan diupdate oleh semakkod.js dengan URL sijil
+    });
+  </script>
+</body>
+</html>
