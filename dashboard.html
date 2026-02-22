@@ -93,16 +93,83 @@ button:hover{
   transition:0.3s;
   z-index:9999;
 }
+/* LOADER */
+#loader{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:#111;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+}
+
+.spinner{
+  width:50px;
+  height:50px;
+  border:5px solid #444;
+  border-top:5px solid #d4af37;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  100%{transform:rotate(360deg);}
+}
+
+/* CARD FLOAT */
+.card{
+  animation: slideUp 1s forwards ease, float 3s ease-in-out infinite alternate;
+}
+
+@keyframes float{
+  from{transform:translateY(0);}
+  to{transform:translateY(-8px);}
+}
+.card{
+  opacity:0;
+  transform:translateY(30px);
+  animation:fadeUp 1s forwards, float 4s ease-in-out infinite alternate;
+}
+
+@keyframes fadeUp{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes float{
+  from{transform:translateY(0);}
+  to{transform:translateY(-8px);}
+}
+    
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
+<div id="loader">
+  <div class="spinner"></div>
+  <p>Loading HQ System...</p>
+</div>
+  
 <header>GADIS QS HQ – Admin Dashboard</header>
 
 <div class="card">
   <h3>ULTRA ENTERPRISE SYSTEM</h3>
   <p>Status Sistem: <b style="color:green;">AKTIF</b></p>
+  <p>Total Kod Disemak:</p>
+  <div class="counter" id="counter">0</div>
+  <br>
+  <h2 class="counter" data-target="1250">0</h2>
+  <canvas id="myChart" width="300" height="200"></canvas>
+  <canvas id="liveChart"></canvas>
   <button onclick="alert('Sistem Berfungsi Normal')">Semak Sistem</button>
 </div>
 
@@ -116,6 +183,24 @@ function lockdown(){
     document.body.innerHTML="<h1 style='color:red;text-align:center;margin-top:50px;'>SYSTEM LOCKED</h1>";
 }
 </script>
+
+<script>
+/* COUNTER ANIMATION */
+let count = 0;
+let target = 2500; // boleh tukar ikut data sebenar
+let speed = 10;
+
+function updateCounter(){
+  if(count < target){
+    count += 25;
+    document.getElementById("counter").innerText = count;
+    setTimeout(updateCounter, speed);
+  }else{
+    document.getElementById("counter").innerText = target;
+  }
+}
+updateCounter();
+</script>  
   
 <script>
 /* ===============================
@@ -175,6 +260,84 @@ if(!sessionStorage.getItem(SESSION_KEY)){
 }
 </script>  
 
+<script>
+/* HIDE LOADER */
+window.onload = function(){
+  setTimeout(()=>{
+    document.getElementById("loader").style.display="none";
+  },1200);
+};
+
+/* CHART */
+const ctx = document.getElementById('myChart').getContext('2d');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Jan','Feb','Mac','Apr','Mei','Jun'],
+    datasets: [{
+      label: 'Kod Ditebus',
+      data: [120,190,300,250,400,520],
+      borderColor: '#d4af37',
+      backgroundColor: 'rgba(212,175,55,0.2)',
+      tension:0.4,
+      fill:true
+    }]
+  },
+  options: {
+    responsive:true,
+    animation:{
+      duration:2000
+    },
+    plugins:{
+      legend:{display:false}
+    }
+  }
+});
+</script>  
+
+<script>
+document.querySelectorAll(".counter").forEach(counter=>{
+  const updateCount = ()=>{
+    const target = +counter.getAttribute("data-target");
+    const count = +counter.innerText;
+    const increment = target / 200;
+
+    if(count < target){
+      counter.innerText = Math.ceil(count + increment);
+      setTimeout(updateCount, 15);
+    } else {
+      counter.innerText = target;
+    }
+  };
+  updateCount();
+});
+</script> 
+
+  <script>
+async function loadChartData(){
+  const res = await fetch("YOUR_WEBAPP_URL?chart=true");
+  const data = await res.json();
+
+  new Chart(document.getElementById('liveChart'), {
+    type:'line',
+    data:{
+      labels:data.labels,
+      datasets:[{
+        data:data.values,
+        borderColor:'#d4af37',
+        backgroundColor:'rgba(212,175,55,0.2)',
+        tension:0.4,
+        fill:true
+      }]
+    },
+    options:{responsive:true}
+  });
+}
+
+loadChartData();
+  </script>
+  
 <script>
 /* ===============================
    SERVICE WORKER REGISTER
