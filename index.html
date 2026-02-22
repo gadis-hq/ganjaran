@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Manifest PWA -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/ganjaran/manifest.json">
 
   <!-- Paficon -->
   <link rel="shortcut icon" href="icons/icon-192.png" type="image/png">
@@ -80,11 +80,9 @@
   <script>
     // Service Worker register untuk PWA
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(reg => console.log('Service Worker terdaftar:', reg.scope))
-          .catch(err => console.log('Service Worker gagal:', err));
-      });
+  navigator.serviceWorker.register('/ganjaran/service-worker.js')
+    .then(() => console.log("SW Registered"))
+    .catch(err => console.log("SW Error:", err));
     }
 
 <script>
