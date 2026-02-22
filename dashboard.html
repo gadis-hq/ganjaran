@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/style.css">
 
   <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/ganjaran/manifest.json">
 
   <!-- Icons -->
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -63,13 +63,12 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
 
   <script>
-    // Register service worker
-    if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/ganjaran/service-worker.js')
-    .then(() => console.log("Service Worker Registered"))
-    .catch(err => console.log("SW Failed:", err));
-    }
-
+    .then(() => console.log("SW Registered"))
+    .catch(err => console.log("SW Error:", err));
+}
+ 
     // Confetti function
     function triggerConfetti() {
       confetti({
