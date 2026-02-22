@@ -2,18 +2,18 @@
   "name": "GADIS QS HQ",
   "short_name": "GADIS HQ",
   "start_url": "/ganjaran/",
-"scope": "/ganjaran/"
+  "scope": "/ganjaran/",
   "display": "standalone",
   "background_color": "#fff0f5",
   "theme_color": "#d4af37",
-  "icon": [
+  "icons": [
     {
-      "src": "./icon/icon-192.png",
+      "src": "/ganjaran/icon/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./icon/icon-512.png",
+      "src": "/ganjaran/icon/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
