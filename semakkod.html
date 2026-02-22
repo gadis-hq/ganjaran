@@ -9,11 +9,11 @@
   <link rel="stylesheet" href="css/style.css">
 
   <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/ganjaran/manifest.json">
 
-  <!-- Icons -->
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <!-- Icon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon/icon-512.png">
 
   <!-- JS -->
   <script src="js/config.js" defer></script>
@@ -63,11 +63,9 @@
   <script>
     // Service Worker register
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(reg => console.log('Service Worker registered:', reg.scope))
-          .catch(err => console.log('Service Worker failed:', err));
-      });
+  navigator.serviceWorker.register('/ganjaran/service-worker.js')
+    .then(() => console.log("SW Registered"))
+    .catch(err => console.log("SW Error:", err));
     }
 
     // Tombol sijil nanti akan diisi oleh semakkod.js
