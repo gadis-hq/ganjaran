@@ -12,35 +12,74 @@
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:#fff0f5;
+  background: linear-gradient(-45deg, #fff0f5, #fceabb, #fff0f5, #f8d7da);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
   text-align:center;
+  overflow-x:hidden;
 }
+
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
 header{
   background:#d4af37;
   color:white;
   padding:20px;
-  font-size:20px;
+  font-size:22px;
   font-weight:bold;
+  box-shadow:0 0 20px rgba(212,175,55,0.8);
+  animation: glow 2s infinite alternate;
 }
+
+@keyframes glow{
+  from{box-shadow:0 0 10px rgba(212,175,55,0.6);}
+  to{box-shadow:0 0 25px rgba(212,175,55,1);}
+}
+
 .card{
   margin:30px auto;
-  padding:20px;
+  padding:25px;
   width:90%;
   max-width:500px;
   background:white;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  border-radius:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  transform:translateY(50px);
+  opacity:0;
+  animation: slideUp 1s forwards ease;
 }
+
+@keyframes slideUp{
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
 button{
-  padding:10px 20px;
+  padding:12px 25px;
   background:#d4af37;
   border:none;
   color:white;
-  border-radius:8px;
+  border-radius:10px;
   cursor:pointer;
+  transition:0.3s;
 }
+
 button:hover{
-  opacity:0.9;
+  transform:scale(1.05);
+  box-shadow:0 0 15px rgba(212,175,55,0.7);
+}
+
+.counter{
+  font-size:30px;
+  font-weight:bold;
+  color:#d4af37;
+  
 }
 #blurScreen{
   position:fixed;
@@ -68,6 +107,73 @@ button:hover{
 </div>
 
 <div id="blurScreen"></div>
+
+<button onclick="lockdown()">LOCKDOWN MODE</button>
+
+<script>
+function lockdown(){
+    alert("HQ LOCKDOWN AKTIF");
+    document.body.innerHTML="<h1 style='color:red;text-align:center;margin-top:50px;'>SYSTEM LOCKED</h1>";
+}
+</script>
+  
+<script>
+/* ===============================
+   HQ LOGIN TOKEN SYSTEM
+=============================== */
+
+const HQ_TOKEN = "GADIS-HQ-2026-ULTRA";
+const DEVICE_KEY = "hq_device_lock";
+const SESSION_KEY = "hq_logged_in";
+
+/* LOGIN CHECK */
+function hqLogin(){
+    let token = prompt("Masukkan Token HQ:");
+    if(token === HQ_TOKEN){
+        sessionStorage.setItem(SESSION_KEY,"true");
+        lockDevice();
+        alert("Akses Dibenarkan");
+    }else{
+        alert("Token Salah");
+        document.body.innerHTML="";
+    }
+}
+
+/* DEVICE LOCK */
+function lockDevice(){
+    let fingerprint = navigator.userAgent;
+    localStorage.setItem(DEVICE_KEY,fingerprint);
+}
+
+/* VERIFY DEVICE */
+function verifyDevice(){
+    let saved = localStorage.getItem(DEVICE_KEY);
+    if(saved && saved !== navigator.userAgent){
+        alert("Peranti Tidak Dibenarkan");
+        document.body.innerHTML="";
+    }
+}
+
+/* AUTO LOGOUT (5 minit idle) */
+let timeout;
+function resetTimer(){
+    clearTimeout(timeout);
+    timeout = setTimeout(()=>{
+        sessionStorage.removeItem(SESSION_KEY);
+        alert("Sesi Tamat");
+        location.reload();
+    },300000);
+}
+
+document.addEventListener("mousemove",resetTimer);
+document.addEventListener("keydown",resetTimer);
+
+/* INIT */
+verifyDevice();
+if(!sessionStorage.getItem(SESSION_KEY)){
+    hqLogin();
+}
+</script>  
 
 <script>
 /* ===============================
