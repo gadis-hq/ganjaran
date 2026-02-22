@@ -27,3 +27,22 @@ body {
     border-radius: 6px;
     text-decoration: none;
 }
+.install-hq {
+  display: none;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #d4af37, #fff0f5, #d4af37);
+  background-size: 200% 200%;
+  animation: glowGold 3s ease infinite;
+  box-shadow: 0 0 20px rgba(212,175,55,0.6);
+}
+
+@keyframes glowGold {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
