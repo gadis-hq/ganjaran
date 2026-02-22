@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gadis-qshq-cache-v2';
+const CACHE_NAME = 'gadis-qshq-cache-v3';
 
 const urlsToCache = [
   './',
