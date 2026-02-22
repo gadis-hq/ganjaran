@@ -1,0 +1,29 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #fff0f5;
+    color: #333;
+}
+.card-premium {
+    padding: 15px;
+    border-radius: 12px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+}
+.card-premium .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 3rem;
+    color: rgba(212,175,55,0.1);
+    transform: translate(-50%, -50%) rotate(-30deg);
+    pointer-events: none;
+}
+.btn-premium {
+    background: linear-gradient(to right, #ff99cc, #d4af37);
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+}
