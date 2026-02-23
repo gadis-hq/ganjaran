@@ -57,6 +57,12 @@
     <div id="heatmap-map"></div>
   </section>
 
+<div id="map" style="height:550px;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  
   <!-- Top 5 Bandar -->
   <section id="top5" class="card-premium">
     <h2>🏆 Top 5 Bandar</h2>
@@ -79,7 +85,6 @@
     <p>&copy; 2026 GADIS QS HQ</p>
   </footer>
 
-  <!-- Heatmap Negeri -->
 <script>
 const API = "YOUR_WEBAPP_URL";
 
@@ -149,6 +154,55 @@ async function loadHeatmap(){
 
   }).addTo(map);
 
+  /* ===== Heatmap Bandar ===== */
+  <script>
+const API = "YOUR_WEBAPP_URL";
+
+const map = L.map('map').setView([4.5,109],6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+.addTo(map);
+
+let heatLayer;
+
+async function loadCityHeatmap(){
+
+  const res = await fetch(API + "?type=heatmapCity");
+  const bandarData = await res.json();
+
+  if(heatLayer) map.removeLayer(heatLayer);
+
+  let heatPoints = [];
+
+  for(const bandar in bandarData){
+
+    const count = bandarData[bandar];
+
+    // Geocode bandar → dapatkan lat/lon
+    const geo = await fetch(
+      "https://nominatim.openstreetmap.org/search?format=json&q="+bandar+", Malaysia"
+    );
+    const loc = await geo.json();
+
+    if(loc && loc[0]){
+      heatPoints.push([
+        parseFloat(loc[0].lat),
+        parseFloat(loc[0].lon),
+        count
+      ]);
+    }
+  }
+
+  heatLayer = L.heatLayer(heatPoints,{
+    radius:25,
+    blur:20,
+    maxZoom:10
+  }).addTo(map);
+
+}
+
+loadCityHeatmap();
+setInterval(loadCityHeatmap,30000);
 
   /* ===== MARKER ANIMASI ===== */
   data.markers.forEach(m=>{
