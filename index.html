@@ -46,6 +46,11 @@
     </div>
   </section>
 
+  <div id="map" style="height:500px;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
   <!-- Heatmap -->
   <section id="heatmap" class="card-premium">
     <h2>🌍 Heatmap Bandar</h2>
@@ -74,6 +79,116 @@
     <p>&copy; 2026 GADIS QS HQ</p>
   </footer>
 
+  <!-- Heatmap Negeri -->
+<script>
+const API = "YOUR_WEBAPP_URL";
+
+const map = L.map('map').setView([4.5,109],6);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+.addTo(map);
+
+let geoLayer;
+let markerLayer = L.layerGroup().addTo(map);
+
+function getColor(value){
+  return value > 50 ? '#7f0000' :
+         value > 30 ? '#b30000' :
+         value > 20 ? '#d7301f' :
+         value > 10 ? '#ef6548' :
+         value > 5  ? '#fc8d59' :
+         value > 1  ? '#fdbb84' :
+                      '#fee8c8';
+}
+
+async function loadHeatmap(){
+
+  const res = await fetch(API + "?type=heatmap");
+  const data = await res.json();
+
+  if(geoLayer) map.removeLayer(geoLayer);
+  markerLayer.clearLayers();
+
+  const geoRes = await fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/MYS.geo.json");
+  const geoData = await geoRes.json();
+
+  geoLayer = L.geoJSON(geoData, {
+
+    style: function(feature){
+      const negeri = feature.properties.name.toUpperCase();
+      const count = data.negeri[negeri] ? data.negeri[negeri].count : 0;
+
+      return {
+        fillColor: getColor(count),
+        weight:1,
+        color:'#ffffff',
+        fillOpacity:0.8
+      };
+    },
+
+    onEachFeature: function(feature, layer){
+      const negeri = feature.properties.name.toUpperCase();
+      const info = data.negeri[negeri];
+
+      if(info){
+
+        let senarai = "<ul>";
+        info.names.forEach(n=>{
+          senarai += "<li>"+n+"</li>";
+        });
+        senarai += "</ul>";
+
+        layer.bindPopup(
+          "<strong>"+negeri+"</strong><br>" +
+          "Jumlah SAH: "+info.count+
+          "<hr>"+senarai
+        );
+
+      }
+    }
+
+  }).addTo(map);
+
+
+  /* ===== MARKER ANIMASI ===== */
+  data.markers.forEach(m=>{
+
+    fetch("https://nominatim.openstreetmap.org/search?format=json&q="+m.lokasi)
+    .then(r=>r.json())
+    .then(loc=>{
+
+      if(loc && loc[0]){
+        const lat = loc[0].lat;
+        const lon = loc[0].lon;
+
+        const marker = L.circleMarker([lat,lon],{
+          radius:8,
+          color:"#d4af37",
+          fillColor:"#ff1493",
+          fillOpacity:0.9
+        });
+
+        marker.bindPopup("<strong>"+m.nama+"</strong><br>"+m.lokasi);
+
+        marker.addTo(markerLayer);
+
+        setTimeout(()=>{
+          marker.setRadius(14);
+          setTimeout(()=>marker.setRadius(8),400);
+        },500);
+
+      }
+
+    });
+
+  });
+
+}
+
+loadHeatmap();
+setInterval(loadHeatmap,20000);
+</script>
+
   <!-- Confetti & Badge Script -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
 
@@ -84,6 +199,9 @@
     .then(() => console.log("SW Registered"))
     .catch(err => console.log("SW Error:", err));
     }
+    
+  </script>
+      
 
 <script>
 let deferredPrompt;
