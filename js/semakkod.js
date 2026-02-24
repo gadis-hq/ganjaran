@@ -40,7 +40,7 @@ async function semakKod() {
               <p><strong>Nama:</strong> ${data.nama}</p>
               <p><strong>Hadiah:</strong> ${data.hadiah}</p>
               <p><strong>Status Kod:</strong> ${data.status_kod}</p>
-              <p><strong>Pembelian Produk:</strong> ${data.pembelian_produk}</p>
+              <p>Pembelian Produk: ${data.pembelian_produk}</p>
               <p><strong>Harga:</strong> ${data.harga}</p>
               <p><strong>No. Telefon:</strong> ${data.no_telefon}</p>
               <p><strong>No. IC:</strong> ${data.no_ic}</p>
