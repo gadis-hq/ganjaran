@@ -7,6 +7,7 @@
 
   <!-- Theme & Styles -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
   <!-- Manifest PWA -->
   <link rel="manifest" href="/ganjaran/manifest.json">
@@ -25,6 +26,7 @@
   <script src="js/dashboard.js" defer></script>
   <script src="js/api.js" defer></script>
   <script src="js/auth.js" defer></script>
+  <sscript src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 </head>
 <body>
@@ -34,6 +36,7 @@
     <p>Dashboard Ultra Premium</p>
   </header>
 
+  
  <button id="installBtn" class="install-hq">
   ✨ INSTALL GADIS QS HQ
  </button>
@@ -47,9 +50,6 @@
   </section>
 
   <div id="map" style="height:500px;"></div>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <!-- Heatmap -->
   <section id="heatmap" class="card-premium">
@@ -70,6 +70,7 @@
       Loading...
     </ol>
   </section>
+  
 
   <!-- LED Stage Mode -->
   <section id="led-stage" class="card-premium">
@@ -155,7 +156,6 @@ async function loadHeatmap(){
   }).addTo(map);
   </script>
 
-  /* ===== Heatmap Bandar ===== */
   <script>
 const API = "https://script.google.com/macros/s/AKfycbw34iaobuZVWwmJ7vlLqOCKzTedVSgwqcYpyPDZiMYUUUqXTLNAFnX7m9TwzZI7RXYh/exec";
 
