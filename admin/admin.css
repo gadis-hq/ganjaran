@@ -1,45 +1,52 @@
 body{
-  font-family: Arial;
-  background: #fff0f5;
-  padding: 15px;
+  font-family:Arial;
+  margin:0;
+  background:#fff0f5;
 }
 
-h1{
+header{
+  background:#d4af37;
+  padding:15px;
   text-align:center;
-  color:#d4af37;
+  color:white;
 }
 
 .stats{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+  padding:20px;
 }
 
 .card{
-  flex:1;
   background:white;
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.map-section{
+  padding:20px;
+}
+
+#googleMap,#osmMap{
+  height:400px;
+  display:none;
+}
+
+#winnerPopup{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#ff69b4;
+  color:white;
   padding:15px;
   border-radius:10px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-  text-align:center;
+  display:none;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-
-th,td{
-  border:1px solid #ddd;
-  padding:8px;
-  text-align:center;
-}
-
-button{
-  background:#d4af37;
-  border:none;
-  padding:5px 10px;
+.event-mode{
+  background:black;
   color:white;
-  border-radius:5px;
 }
