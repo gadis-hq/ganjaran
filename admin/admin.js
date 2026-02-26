@@ -48,3 +48,8 @@ const percent = Math.round((data.totalTebus / data.totalSah) * 100);
 
 document.getElementById("progressBar").style.width = percent + "%";
 document.getElementById("progressText").innerText = percent + "%";
+
+function eventMode(){
+  document.documentElement.requestFullscreen();
+  document.body.classList.toggle("event-mode");
+}
