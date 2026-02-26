@@ -102,3 +102,93 @@ function switchMap(type){
     if(!osmMap) initOSM();
   }
 }
+
+const ctx = document.getElementById('liveChart').getContext('2d');
+
+let liveChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: 'Kod Sah',
+        data: [],
+        borderColor: '#ff69b4',
+        backgroundColor: 'rgba(255,105,180,0.08)',
+        tension: 0.4,
+        fill: false,
+        pointRadius: 3
+      },
+      {
+        label: 'Kod Ditebus',
+        data: [],
+        borderColor: '#d4af37',
+        backgroundColor: 'rgba(212,175,55,0.08)',
+        tension: 0.4,
+        fill: false,
+        pointRadius: 3
+      },
+      {
+        label: 'Kod Belum Tebus',
+        data: [],
+        borderColor: '#8a2be2',
+        backgroundColor: 'rgba(138,43,226,0.08)',
+        tension: 0.4,
+        fill: false,
+        borderDash: [5,5],
+        pointRadius: 3
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: {
+      duration: 700,
+      easing: 'easeInOutQuart'
+    },
+    plugins: {
+      legend: {
+        display: true
+      }
+    },
+    scales: {
+      x: { display: false },
+      y: { beginAtZero: true }
+    }
+  }
+});
+
+function updateChartLive(value){
+
+  const time = new Date().toLocaleTimeString();
+
+  liveChart.data.labels.push(time);
+  liveChart.data.datasets[0].data.push(value);
+
+  // Hadkan maksimum 15 data supaya graf sentiasa bergerak
+  if(liveChart.data.labels.length > 15){
+    liveChart.data.labels.shift();
+    liveChart.data.datasets[0].data.shift();
+  }
+
+  liveChart.update();
+}
+
+function updateChartLive(totalSah, totalTebus){
+
+  const totalBelum = totalSah - totalTebus;
+  const time = new Date().toLocaleTimeString();
+
+  liveChart.data.labels.push(time);
+
+  liveChart.data.datasets[0].data.push(totalSah);
+  liveChart.data.datasets[1].data.push(totalTebus);
+  liveChart.data.datasets[2].data.push(totalBelum);
+
+  if(liveChart.data.labels.length > 15){
+    liveChart.data.labels.shift();
+    liveChart.data.datasets.forEach(ds => ds.data.shift());
+  }
+
+  liveChart.update();
+}
