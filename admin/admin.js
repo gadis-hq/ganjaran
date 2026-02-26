@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby77skERInziyInY2vlgrBUcZG-e5IIM4lV4dTGxdvhq_1MgIqAE4CazEm2mivwQbo0/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6m-F4D2RN7C8l2e7n_gZuvOrBeAkDhIlu6s5LCS_kDp3QWl9_iQw_1xdZ1srMVuQL/exec";
 
 // =======================
 // LIVE STATS
@@ -11,9 +11,9 @@ async function loadStats(){
   document.getElementById("totalTebus").innerText = data.totalTebus;
 
   const totalBelum = data.totalSah - data.totalTebus;
-  document.getElementById("totalBelum").innerText = totalBelum;
+  document.getElementById("totalBelum").innerText = data.totalBelum;
 
-  updateChartLive(data.totalSah, data.totalTebus);
+  updateChartLive(data.totalSah, data.totalTebus, data.totalBelum);
 
   if(data.newRedeem){
     playSound();
@@ -41,8 +41,8 @@ let liveChart = new Chart(ctx,{
   }
 });
 
-function updateChartLive(sah,tebus){
-  const belum = sah - tebus;
+function updateChartLive(sah,tebus,belum){
+
   const time = new Date().toLocaleTimeString();
 
   liveChart.data.labels.push(time);
