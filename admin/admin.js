@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw34iaobuZVWwmJ7vlLqOCKzTedVSgwqcYpyPDZiMYUUUqXTLNAFnX7m9TwzZI7RXYh/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby77skERInziyInY2vlgrBUcZG-e5IIM4lV4dTGxdvhq_1MgIqAE4CazEm2mivwQbo0/exec";
 
 // =======================
 // LIVE STATS
