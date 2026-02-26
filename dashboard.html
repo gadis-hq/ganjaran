@@ -317,7 +317,7 @@ document.querySelectorAll(".counter").forEach(counter=>{
 
   <script>
 async function loadChartData(){
-  const res = await fetch("https://script.google.com/macros/s/AKfycbw34iaobuZVWwmJ7vlLqOCKzTedVSgwqcYpyPDZiMYUUUqXTLNAFnX7m9TwzZI7RXYh/exec?chart=true");
+  const res = await fetch("https://script.google.com/macros/s/AKfycby77skERInziyInY2vlgrBUcZG-e5IIM4lV4dTGxdvhq_1MgIqAE4CazEm2mivwQbo0/exec?chart=true");
   const data = await res.json();
 
   new Chart(document.getElementById('liveChart'), {
