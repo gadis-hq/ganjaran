@@ -1,50 +1,44 @@
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw34iaobuZVWwmJ7vlLqOCKzTedVSgwqcYpyPDZiMYUUUqXTLNAFnX7m9TwzZI7RXYh/exec";
-const SECURITY_KEY = "GADIS-HQ-2026-ULTRA";
+let map;
+let heatmap;
 
-if(localStorage.getItem("adminAuth") !== "true"){
-  window.location.href = "index.html";
-}
-
-async function loadAdminData(){
-  const response = await fetch(
-    APPS_SCRIPT_URL + "?key=" + SECURITY_KEY + "&mode=admin"
-  );
-
-  const data = await response.json();
-
-  document.getElementById("totalKod").innerText = data.total;
-  document.getElementById("redeemKod").innerText = data.redeem;
-  document.getElementById("bandarAktif").innerText = data.bandars;
-
-  renderTable(data.list);
-}
-
-function renderTable(list){
-  const tbody = document.querySelector("#redeemTable tbody");
-  tbody.innerHTML = "";
-
-  list.forEach(item=>{
-    tbody.innerHTML += `
-      <tr>
-        <td>${item.nama}</td>
-        <td>${item.kod}</td>
-        <td>${item.bandar}</td>
-        <td>${item.tarikh}</td>
-        <td>
-          <button onclick="blockKod('${item.kod}')">Block</button>
-        </td>
-      </tr>
-    `;
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 6,
+    center: { lat: 4.2105, lng: 101.9758 },
   });
+
+  loadHeatmap();
 }
 
-async function blockKod(kod){
-  await fetch(
-    APPS_SCRIPT_URL + "?key=" + SECURITY_KEY + "&block=" + kod
+async function loadHeatmap() {
+  const res = await fetch(APPS_SCRIPT_URL + "?key=" + SECURITY_KEY + "&mode=heatmap");
+  const data = await res.json();
+
+  const points = data.map(loc =>
+    new google.maps.LatLng(loc.lat, loc.lng)
   );
-  alert("Kod diblock.");
-  loadAdminData();
+
+  heatmap = new google.maps.visualization.HeatmapLayer({
+    data: points,
+    radius: 35
+  });
+
+  heatmap.setMap(map);
 }
 
-setInterval(loadAdminData, 10000);
-loadAdminData();
+function animateValue(id, start, end, duration) {
+  let range = end - start;
+  let current = start;
+  let increment = end > start ? 1 : -1;
+  let stepTime = Math.abs(Math.floor(duration / range));
+
+  let obj = document.getElementById(id);
+
+  let timer = setInterval(function() {
+    current += increment;
+    obj.innerHTML = current;
+    if (current == end) {
+      clearInterval(timer);
+    }
+  }, stepTime);
+}
