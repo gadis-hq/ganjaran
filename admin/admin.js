@@ -1,3 +1,4 @@
+let lastTebusCount = 0;
 let map;
 let heatmap;
 
@@ -42,3 +43,8 @@ function animateValue(id, start, end, duration) {
     }
   }, stepTime);
 }
+
+const percent = Math.round((data.totalTebus / data.totalSah) * 100);
+
+document.getElementById("progressBar").style.width = percent + "%";
+document.getElementById("progressText").innerText = percent + "%";
