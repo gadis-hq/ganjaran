@@ -1,53 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard – GADIS QS</title>
-<link rel="stylesheet" href="admin.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>  
+  <meta charset="UTF-8">
+  <title>HQ Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Leaflet (Free Map Mode) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 </head>
 <body>
 
-<h1>📊 ADMIN HQ DASHBOARD</h1>
+<header>
+  <h1>HQ LIVE DASHBOARD</h1>
+  <button onclick="eventMode()">🎬 Event Mode</button>
+</header>
 
-<div class="stats">
+<section class="stats">
   <div class="card">
-    <h3>Total Kod</h3>
-    <p id="totalKod">0</p>
+    <h3>Kod Sah</h3>
+    <p id="totalSah">0</p>
   </div>
+
   <div class="card">
     <h3>Kod Ditebus</h3>
-    <p id="redeemKod">0</p>
+    <p id="totalTebus">0</p>
   </div>
+
   <div class="card">
-    <h3>Bandar Aktif</h3>
-    <p id="bandarAktif">0</p>
-    <canvas id="liveChart" height="120"></canvas>
+    <h3>Belum Tebus</h3>
+    <p id="totalBelum">0</p>
   </div>
-</div>
+</section>
 
-<h2>📍 Heatmap Bandar</h2>
-<div id="map" style="height:500px; border-radius:12px;"></div>
+<section>
+  <canvas id="liveChart" height="100"></canvas>
+</section>
 
-<h2>🧾 Senarai Tebusan</h2>
-<table id="redeemTable">
-<thead>
-<tr>
-<th>Nama</th>
-<th>Kod</th>
-<th>Bandar</th>
-<th>Tarikh</th>
-<th>Tindakan</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+<section class="map-section">
+  <button onclick="switchMap('google')">Google Map</button>
+  <button onclick="switchMap('osm')">OpenStreetMap</button>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
+  <div id="googleMap"></div>
+  <div id="osmMap"></div>
+</section>
+
+<div id="winnerPopup"></div>
+
+<!-- Audio -->
+<audio id="notifySound" src="sound/notify.mp3"></audio>
+
+<!-- Google Maps (letak API key sendiri) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization&callback=initGoogleMap" async defer></script>
+
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="admin.js"></script> 
+
+<!-- Script utama -->
 <script src="admin.js"></script>
 
 </body>
