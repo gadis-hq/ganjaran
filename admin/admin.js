@@ -1,194 +1,84 @@
-let lastTebusCount = 0;
-let map;
-let heatmap;
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw34iaobuZVWwmJ7vlLqOCKzTedVSgwqcYpyPDZiMYUUUqXTLNAFnX7m9TwzZI7RXYh/exec";
 
-function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 6,
-    center: { lat: 4.2105, lng: 101.9758 },
-  });
-
-  loadHeatmap();
-}
-
-async function loadHeatmap() {
-  const res = await fetch(APPS_SCRIPT_URL + "?key=" + SECURITY_KEY + "&mode=heatmap");
+// =======================
+// LIVE STATS
+// =======================
+async function loadStats(){
+  const res = await fetch(APPS_SCRIPT_URL + "?mode=stats");
   const data = await res.json();
 
-  const points = data.map(loc =>
-    new google.maps.LatLng(loc.lat, loc.lng)
-  );
+  document.getElementById("totalSah").innerText = data.totalSah;
+  document.getElementById("totalTebus").innerText = data.totalTebus;
 
-  heatmap = new google.maps.visualization.HeatmapLayer({
-    data: points,
-    radius: 35
-  });
+  const totalBelum = data.totalSah - data.totalTebus;
+  document.getElementById("totalBelum").innerText = totalBelum;
 
-  heatmap.setMap(map);
-}
+  updateChartLive(data.totalSah, data.totalTebus);
 
-function animateValue(id, start, end, duration) {
-  let range = end - start;
-  let current = start;
-  let increment = end > start ? 1 : -1;
-  let stepTime = Math.abs(Math.floor(duration / range));
-
-  let obj = document.getElementById(id);
-
-  let timer = setInterval(function() {
-    current += increment;
-    obj.innerHTML = current;
-    if (current == end) {
-      clearInterval(timer);
-    }
-  }, stepTime);
-}
-
-const percent = Math.round((data.totalTebus / data.totalSah) * 100);
-
-document.getElementById("progressBar").style.width = percent + "%";
-document.getElementById("progressText").innerText = percent + "%";
-
-function eventMode(){
-  document.documentElement.requestFullscreen();
-  document.body.classList.toggle("event-mode");
-}
-
-let osmMap;
-let osmHeat;
-
-function initOSM(){
-  osmMap = L.map('osmMap').setView([4.2105,101.9758],6);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'© OpenStreetMap'
-  }).addTo(osmMap);
-
-  loadOSMHeatmap();
-}
-
-async function loadOSMHeatmap(){
-  const res = await fetch(APPS_SCRIPT_URL + "?mode=heatmap");
-  const data = await res.json();
-
-  const heatPoints = data.map(loc => [loc.lat, loc.lng, 0.5]);
-
-  osmHeat = L.heatLayer(heatPoints,{
-    radius:25,
-    blur:20
-  }).addTo(osmMap);
-
-  // Marker bandar
-  data.forEach(loc=>{
-    L.circleMarker([loc.lat,loc.lng],{
-      radius:8,
-      color:'#ff69b4'
-    }).addTo(osmMap);
-  });
-}
-
-function switchMap(type){
-
-  document.getElementById("googleMap").style.display="none";
-  document.getElementById("osmMap").style.display="none";
-
-  if(type==="google"){
-    document.getElementById("googleMap").style.display="block";
-    if(!googleMap) initGoogleMap();
-  }
-
-  if(type==="osm"){
-    document.getElementById("osmMap").style.display="block";
-    if(!osmMap) initOSM();
+  if(data.newRedeem){
+    playSound();
+    showWinner(data.latestWinner);
   }
 }
 
+setInterval(loadStats,5000);
+loadStats();
+
+// =======================
+// CHART (Triple Line)
+// =======================
 const ctx = document.getElementById('liveChart').getContext('2d');
 
-let liveChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [
-      {
-        label: 'Kod Sah',
-        data: [],
-        borderColor: '#ff69b4',
-        backgroundColor: 'rgba(255,105,180,0.08)',
-        tension: 0.4,
-        fill: false,
-        pointRadius: 3
-      },
-      {
-        label: 'Kod Ditebus',
-        data: [],
-        borderColor: '#d4af37',
-        backgroundColor: 'rgba(212,175,55,0.08)',
-        tension: 0.4,
-        fill: false,
-        pointRadius: 3
-      },
-      {
-        label: 'Kod Belum Tebus',
-        data: [],
-        borderColor: '#8a2be2',
-        backgroundColor: 'rgba(138,43,226,0.08)',
-        tension: 0.4,
-        fill: false,
-        borderDash: [5,5],
-        pointRadius: 3
-      }
+let liveChart = new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:[],
+    datasets:[
+      {label:'Kod Sah',data:[],borderColor:'#ff69b4',tension:0.4},
+      {label:'Kod Ditebus',data:[],borderColor:'#d4af37',tension:0.4},
+      {label:'Belum Tebus',data:[],borderColor:'#8a2be2',borderDash:[5,5],tension:0.4}
     ]
-  },
-  options: {
-    responsive: true,
-    animation: {
-      duration: 700,
-      easing: 'easeInOutQuart'
-    },
-    plugins: {
-      legend: {
-        display: true
-      }
-    },
-    scales: {
-      x: { display: false },
-      y: { beginAtZero: true }
-    }
   }
 });
 
-function updateChartLive(value){
-
+function updateChartLive(sah,tebus){
+  const belum = sah - tebus;
   const time = new Date().toLocaleTimeString();
 
   liveChart.data.labels.push(time);
-  liveChart.data.datasets[0].data.push(value);
+  liveChart.data.datasets[0].data.push(sah);
+  liveChart.data.datasets[1].data.push(tebus);
+  liveChart.data.datasets[2].data.push(belum);
 
-  // Hadkan maksimum 15 data supaya graf sentiasa bergerak
-  if(liveChart.data.labels.length > 15){
+  if(liveChart.data.labels.length>15){
     liveChart.data.labels.shift();
-    liveChart.data.datasets[0].data.shift();
+    liveChart.data.datasets.forEach(d=>d.data.shift());
   }
 
   liveChart.update();
 }
 
-function updateChartLive(totalSah, totalTebus){
+// =======================
+// AUDIO & POPUP
+// =======================
+function playSound(){
+  document.getElementById("notifySound").play();
+}
 
-  const totalBelum = totalSah - totalTebus;
-  const time = new Date().toLocaleTimeString();
+function showWinner(name){
+  const popup = document.getElementById("winnerPopup");
+  popup.innerText = "🏆 Pemenang: " + name;
+  popup.style.display="block";
 
-  liveChart.data.labels.push(time);
+  setTimeout(()=>{
+    popup.style.display="none";
+  },5000);
+}
 
-  liveChart.data.datasets[0].data.push(totalSah);
-  liveChart.data.datasets[1].data.push(totalTebus);
-  liveChart.data.datasets[2].data.push(totalBelum);
-
-  if(liveChart.data.labels.length > 15){
-    liveChart.data.labels.shift();
-    liveChart.data.datasets.forEach(ds => ds.data.shift());
-  }
-
-  liveChart.update();
+// =======================
+// EVENT MODE
+// =======================
+function eventMode(){
+  document.body.classList.toggle("event-mode");
+  document.documentElement.requestFullscreen();
 }
