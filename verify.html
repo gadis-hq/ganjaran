@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Verification - GADIS QS HQ</title>
+<style>
+body{
+  font-family: Arial;
+  text-align:center;
+  padding:40px;
+  background:#fff0f5;
+}
+.card{
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+.success{color:green;font-weight:bold;}
+.warning{color:orange;font-weight:bold;}
+.error{color:red;font-weight:bold;}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>QR Verification</h2>
+  <div id="result">Memproses...</div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+const token = params.get("token");
+
+fetch("WEB_APP_URL_PUAN?mode=verify&code="+code+"&token="+token)
+.then(res=>res.json())
+.then(data=>{
+
+  const result = document.getElementById("result");
+
+  if(!data.success){
+    result.innerHTML =
+      `<div class="error">Kod Tidak Sah / Token Tidak Sah</div>`;
+    return;
+  }
+
+  if(data.status === "TELAH_DITEBUS"){
+    result.innerHTML =
+      `<div class="success">
+        KOD SAH & TELAH DITEBUS<br><br>
+        Nama: ${data.nama}<br>
+        Negeri: ${data.negeri}<br>
+        Tarikh: ${data.tarikh}
+      </div>`;
+  }
+
+  if(data.status === "AKTIF_BELUM_DITEBUS"){
+    result.innerHTML =
+      `<div class="warning">
+        KOD SAH & MASIH AKTIF<br>
+        Belum Ditebus
+      </div>`;
+  }
+
+});
+</script>
+
+</body>
+</html>
