@@ -1,10 +1,6 @@
-async function fetchKodSiri(kod) {
-    try {
-        const res = await fetch(`${CONFIG.API_URL}?kod=${encodeURIComponent(kod)}`);
-        const data = await res.json();
-        return data;
-    } catch(e) {
-        console.error("Fetch error:", e);
-        return { success:false, message:"Ralat sambungan server." };
-    }
+import { CONFIG } from "./config.js";
+
+export async function callAPI(params){
+  const res = await fetch(CONFIG.WEB_APP + params);
+  return res.json();
 }
