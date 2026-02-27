@@ -1,104 +1,28 @@
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background: linear-gradient(-45deg, #fff0f5, #fceabb, #fff0f5, #f8d7da);
-  background-size: 400% 400%;
-  animation: gradientMove 10s ease infinite;
+  font-family:Arial;
+  background:#fff0f5;
   text-align:center;
-  overflow-x:hidden;
+  margin:0;
+  padding:30px;
 }
-
-@keyframes gradientMove{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-header{
-  background:#d4af37;
-  color:white;
-  padding:20px;
-  font-size:22px;
-  font-weight:bold;
-  box-shadow:0 0 20px rgba(212,175,55,0.8);
-  animation: glow 2s infinite alternate;
-}
-
-@keyframes glow{
-  from{box-shadow:0 0 10px rgba(212,175,55,0.6);}
-  to{box-shadow:0 0 25px rgba(212,175,55,1);}
-}
-
 .card{
-  margin:30px auto;
-  padding:25px;
-  width:90%;
-  max-width:500px;
   background:white;
+  padding:30px;
   border-radius:15px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.15);
-  transform:translateY(50px);
-  opacity:0;
-  animation: slideUp 1s forwards ease;
+  box-shadow:0 5px 20px rgba(0,0,0,0.1);
 }
-
-@keyframes slideUp{
-  to{
-    transform:translateY(0);
-    opacity:1;
-  }
-}
-
 button{
-  padding:12px 25px;
   background:#d4af37;
+  color:white;
   border:none;
-  color:white;
-  border-radius:10px;
+  padding:10px 20px;
+  border-radius:8px;
   cursor:pointer;
-  transition:0.3s;
 }
-
-button:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 15px rgba(212,175,55,0.7);
+input{
+  padding:10px;
+  width:80%;
 }
-
-.counter{
-  font-size:30px;
-  font-weight:bold;
-  color:#d4af37;
-
-}
-.install-hq {
-  display: none;
-  padding: 14px 24px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  background: linear-gradient(45deg, #d4af37, #fff0f5, #d4af37);
-  background-size: 200% 200%;
-  animation: glowGold 3s ease infinite;
-  box-shadow: 0 0 20px rgba(212,175,55,0.6);
-}
-
-@keyframes glowGold {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-.winner-popup{
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:linear-gradient(90deg,#ff69b4,#d4af37);
-  color:white;
-  padding:15px 25px;
-  border-radius:15px;
-  display:none;
-  font-weight:bold;
-  box-shadow:0 5px 20px rgba(0,0,0,0.3);
-  z-index:9999;
-}
+.success{color:green}
+.warning{color:orange}
+.error{color:red}
