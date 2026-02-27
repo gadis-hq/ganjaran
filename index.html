@@ -1,313 +1,40 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GADIS QS HQ - Dashboard Ultra Premium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GADIS QS HQ</title>
 
-  <!-- Theme & Styles -->
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#d4af37">
 
-  <!-- Manifest PWA -->
-  <link rel="manifest" href="/ganjaran/manifest.json">
-
-  <!-- Paficon -->
-  <link rel="shortcut icon" href="icon/icon-192.png" type="image/png">
-  <link rel="apple-touch-icon" href="icon/icon-192.png">
-  <meta name="theme-color" content="#d4af37">
-
-  <!-- Icons -->
-  <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icon/icon-512.png">
-
-  <!-- JS -->
-  <script src="js/config.js" defer></script>
-  <script src="js/dashboard.js" defer></script>
-  <script src="js/api.js" defer></script>
-  <script src="js/auth.js" defer></script>
-  <sscript src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+<style>
+body{font-family:Arial;text-align:center;padding:40px;background:#fff0f5}
+.card{background:white;padding:30px;border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+button{padding:10px 20px;border:none;border-radius:10px;
+background:#d4af37;color:white;font-weight:bold}
+input{padding:10px;width:80%;margin:10px 0}
+</style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>GADIS QS HQ</h1>
-    <p>Dashboard Ultra Premium</p>
-  </header>
 
-  
- <button id="installBtn" class="install-hq">
-  ✨ INSTALL GADIS QS HQ
- </button>
-  
-  <!-- Live Stats -->
-  <section id="live-stats" class="card-premium">
-    <h2>📊 Live Stats</h2>
-    <div id="stats-content">
-      Loading...
-    </div>
-  </section>
+<div class="card">
+<h2>Semakan Kod Siri</h2>
 
-  <div id="map" style="height:500px;"></div>
-  <canvas id="liveChart" height="120"></canvas>
+<input id="kodInput" placeholder="Masukkan Kod Siri">
+<br>
+<button onclick="semakKod()">Semak</button>
 
-  <!-- Heatmap -->
-  <section id="heatmap" class="card-premium">
-    <h2>🌍 Heatmap Bandar</h2>
-    <div id="heatmap-map"></div>
-  </section>
+<div id="result"></div>
+<br>
+<canvas id="qrCanvas"></canvas>
+<br><br>
 
-<div id="map" style="height:550px;"></div>
+<button id="installBtn" style="display:none;">Install App</button>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
-  
-  <!-- Top 5 Bandar -->
-  <section id="top5" class="card-premium">
-    <div id="winnerPopup" class="winner-popup"></div>
-    <h2>🏆 Top 5 Bandar</h2>
-    <ol id="top5-list">
-      Loading...
-    </ol>
-  </section>
-  
+</div>
 
-  <!-- LED Stage Mode -->
-  <section id="led-stage" class="card-premium">
-    <h2>💡 LED Stage Mode</h2>
-    <div id="led-display">Memaparkan animasi LED...</div>
-  </section>
-
-  <!-- Confetti -->
-  <canvas id="confetti-canvas"></canvas>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2026 GADIS QS HQ</p>
-  </footer>
-
-<script>
-const API = "https://script.google.com/macros/s/AKfycby6m-F4D2RN7C8l2e7n_gZuvOrBeAkDhIlu6s5LCS_kDp3QWl9_iQw_1xdZ1srMVuQL/exec";
-
-const map = L.map('map').setView([4.5,109],6);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-.addTo(map);
-
-let geoLayer;
-let markerLayer = L.layerGroup().addTo(map);
-
-function getColor(value){
-  return value > 50 ? '#7f0000' :
-         value > 30 ? '#b30000' :
-         value > 20 ? '#d7301f' :
-         value > 10 ? '#ef6548' :
-         value > 5  ? '#fc8d59' :
-         value > 1  ? '#fdbb84' :
-                      '#fee8c8';
-}
-
-async function loadHeatmap(){
-
-  const res = await fetch(API + "?type=heatmap");
-  const data = await res.json();
-
-  if(geoLayer) map.removeLayer(geoLayer);
-  markerLayer.clearLayers();
-
-  const geoRes = await fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/MYS.geo.json");
-  const geoData = await geoRes.json();
-
-  geoLayer = L.geoJSON(geoData, {
-
-    style: function(feature){
-      const negeri = feature.properties.name.toUpperCase();
-      const count = data.negeri[negeri] ? data.negeri[negeri].count : 0;
-
-      return {
-        fillColor: getColor(count),
-        weight:1,
-        color:'#ffffff',
-        fillOpacity:0.8
-      };
-    },
-
-    onEachFeature: function(feature, layer){
-      const negeri = feature.properties.name.toUpperCase();
-      const info = data.negeri[negeri];
-
-      if(info){
-
-        let senarai = "<ul>";
-        info.names.forEach(n=>{
-          senarai += "<li>"+n+"</li>";
-        });
-        senarai += "</ul>";
-
-        layer.bindPopup(
-          "<strong>"+negeri+"</strong><br>" +
-          "Jumlah SAH: "+info.count+
-          "<hr>"+senarai
-        );
-
-      }
-    }
-
-  }).addTo(map);
-  </script>
-
-  <script>
-const API = "https://script.google.com/macros/s/AKfycby6m-F4D2RN7C8l2e7n_gZuvOrBeAkDhIlu6s5LCS_kDp3QWl9_iQw_1xdZ1srMVuQL/exec";
-
-const map = L.map('map').setView([4.5,109],6);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-.addTo(map);
-
-let heatLayer;
-
-async function loadCityHeatmap(){
-
-  const res = await fetch(API + "?type=heatmapCity");
-  const bandarData = await res.json();
-
-  if(heatLayer) map.removeLayer(heatLayer);
-
-  let heatPoints = [];
-
-  for(const bandar in bandarData){
-
-    const count = bandarData[bandar];
-
-    // Geocode bandar → dapatkan lat/lon
-    const geo = await fetch(
-      "https://nominatim.openstreetmap.org/search?format=json&q="+bandar+", Malaysia"
-    );
-    const loc = await geo.json();
-
-    if(loc && loc[0]){
-      heatPoints.push([
-        parseFloat(loc[0].lat),
-        parseFloat(loc[0].lon),
-        count
-      ]);
-    }
-  }
-
-  heatLayer = L.heatLayer(heatPoints,{
-    radius:25,
-    blur:20,
-    maxZoom:10
-  }).addTo(map);
-
-}
-
-loadCityHeatmap();
-setInterval(loadCityHeatmap,30000);
-
-  /* ===== MARKER ANIMASI ===== */
-  data.markers.forEach(m=>{
-
-    fetch("https://nominatim.openstreetmap.org/search?format=json&q="+m.lokasi)
-    .then(r=>r.json())
-    .then(loc=>{
-
-      if(loc && loc[0]){
-        const lat = loc[0].lat;
-        const lon = loc[0].lon;
-
-        const marker = L.circleMarker([lat,lon],{
-          radius:8,
-          color:"#d4af37",
-          fillColor:"#ff1493",
-          fillOpacity:0.9
-        });
-
-        marker.bindPopup("<strong>"+m.nama+"</strong><br>"+m.lokasi);
-
-        marker.addTo(markerLayer);
-
-        setTimeout(()=>{
-          marker.setRadius(14);
-          setTimeout(()=>marker.setRadius(8),400);
-        },500);
-
-      }
-
-    });
-
-  });
-
-}
-
-loadHeatmap();
-setInterval(loadHeatmap,20000);
-</script>
-
-  <!-- Confetti & Badge Script -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
-
-  <script>
-    // Service Worker register untuk PWA
-    if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/ganjaran/service-worker.js')
-    .then(() => console.log("SW Registered"))
-    .catch(err => console.log("SW Error:", err));
-    }
-    
-  </script>
-      
-
-<script>
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = 'inline-block';
-});
-
-installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log(`User response: ${outcome}`);
-
-  deferredPrompt = null;
-  installBtn.style.display = 'none';
-});
-
-window.addEventListener('appinstalled', () => {
-  console.log('App berjaya dipasang');
-  installBtn.style.display = 'none';
-});
-    
-    // Badge warna auto (contoh)
-    function updateStatusBadge(status) {
-      const badge = document.createElement('span');
-      badge.classList.add('btn-premium');
-      if(status === 'TELAH DITEBUS') badge.style.backgroundColor = '#d4af37'; // emas
-      else if(status === 'BELUM DITEBUS') badge.style.backgroundColor = '#28a745'; // hijau
-      else badge.style.backgroundColor = '#dc3545'; // merah
-      badge.innerText = status;
-      return badge;
-    }
-
-    // Confetti trigger example
-    function triggerConfetti() {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#ff99cc','#d4af37','#fff0f5']
-      });
-    }
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
