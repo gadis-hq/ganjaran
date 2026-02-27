@@ -1,40 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GADIS QS HQ</title>
-
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#d4af37">
-
-<style>
-body{font-family:Arial;text-align:center;padding:40px;background:#fff0f5}
-.card{background:white;padding:30px;border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,0.1)}
-button{padding:10px 20px;border:none;border-radius:10px;
-background:#d4af37;color:white;font-weight:bold}
-input{padding:10px;width:80%;margin:10px 0}
-</style>
-</head>
-<body>
+<link rel="stylesheet" href="css/style.css">
 
 <div class="card">
-<h2>Semakan Kod Siri</h2>
-
-<input id="kodInput" placeholder="Masukkan Kod Siri">
-<br>
-<button onclick="semakKod()">Semak</button>
-
-<div id="result"></div>
-<br>
-<canvas id="qrCanvas"></canvas>
-<br><br>
-
-<button id="installBtn" style="display:none;">Install App</button>
-
+  <h2>GADIS QS HQ</h2>
+  <a href="semakkod.html">Semak Kod</a><br><br>
+  <a href="admin.html">Admin Login</a>
+  <br><br>
+  <button id="installBtn" style="display:none">Install App</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 <script type="module" src="js/main.js"></script>
-</body>
-</html>
