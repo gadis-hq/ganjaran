@@ -26,3 +26,21 @@ input{
 .success{color:green}
 .warning{color:orange}
 .error{color:red}
+
+.card-premium{
+  background:white;
+  padding:25px;
+  border-radius:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.15);
+  margin-top:20px;
+}
+
+.btn-premium{
+  background:#d4af37;
+  color:white;
+  border:none;
+  padding:12px 25px;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
