@@ -15,6 +15,45 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon/icon-512.png">
 
+<style>
+body{
+  background:black;
+  color:white;
+  text-align:center;
+}
+
+.winner-name{
+  font-size:70px;
+  font-weight:bold;
+  margin-top:100px;
+  text-transform:uppercase;
+  animation: pop3d 1s ease-out;
+  text-shadow:
+    2px 2px 0 gold,
+    4px 4px 0 orange,
+    6px 6px 15px rgba(255,215,0,0.7);
+}
+
+.counter{
+  font-size:30px;
+  margin-top:40px;
+  color:#00ffcc;
+}
+
+@keyframes pop3d{
+  from{transform:scale(0.5); opacity:0;}
+  to{transform:scale(1); opacity:1;}
+}
+</style>
+
+  <h1>🎉 TAHNIAH PEMENANG 🎉</h1>
+
+<div id="winnerName" class="winner-name"></div>
+<div id="statusMessage"></div>
+<div class="counter">
+  Jumlah Scan Hari Ini: <span id="scanCount">0</span>
+  </div>
+  
   <!-- JS -->
   <script src="js/config.js" defer></script>
   <script src="js/dashboard.js" defer></script>
@@ -59,7 +98,8 @@
   </footer>
 
   <!-- JS Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script type="module" src="js/audience.js"></script>
 
   <script>
     // Register service worker
