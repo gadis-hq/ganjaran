@@ -43,4 +43,20 @@ input{
   border-radius:8px;
   font-weight:bold;
   cursor:pointer;
+  
+}
+.scan-success{
+  display:none;
+  margin-top:20px;
+  padding:15px;
+  border-radius:10px;
+  font-weight:bold;
+  background:#28a745;
+  color:white;
+  animation: glow 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes glow{
+  from { box-shadow:0 0 10px #28a745; }
+  to   { box-shadow:0 0 25px #28a745; }
 }
