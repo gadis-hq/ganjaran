@@ -83,28 +83,34 @@ window.startScanner = function(){
 
       html5QrCode.stop();
 
-      // Hanya benarkan QR domain rasmi
       if(qrMessage.startsWith(
         "https://gadis-hq.github.io/ganjaran/verify.html"
       )){
 
-        // 🔊 Bunyi beep
+        // 🔊 Beep
         const audio = new Audio("assets/beep.mp3");
         audio.play();
 
-        // 🟢 Animasi hijau
+        // 🟢 Glow success
         successBox.style.display = "block";
         reader.style.display = "none";
 
-        // Delay 1.5 saat sebelum redirect
+        // 🎆 Confetti burst
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        // 📺 Auto fullscreen kiosk
+        enterKioskMode();
+
         setTimeout(()=>{
           window.location.href = qrMessage;
-        },1500);
+        },1800);
 
       } else {
-
         alert("QR tidak sah.");
-
       }
 
     },
@@ -122,6 +128,20 @@ function stopScanner() {
         });
     }
 }
+
+window.enterKioskMode = function(){
+
+  const doc = document.documentElement;
+
+  if(doc.requestFullscreen){
+    doc.requestFullscreen();
+  } else if(doc.webkitRequestFullscreen){
+    doc.webkitRequestFullscreen();
+  } else if(doc.msRequestFullscreen){
+    doc.msRequestFullscreen();
+  }
+
+};
 
 /* ================================
    Confetti
