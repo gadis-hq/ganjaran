@@ -66,44 +66,53 @@ async function semakKod() {
 /* ================================
    QR SCANNER
 ================================ */
-async function startScanner() {
-    document.getElementById("qr-reader").style.display = "block";
+window.startScanner = function(){
 
-    if (!html5QrCode) {
-        html5QrCode = new Html5Qrcode("qr-reader");
-    }
+  const reader = document.getElementById("qr-reader");
+  const successBox = document.getElementById("scan-success");
 
-    const devices = await Html5Qrcode.getCameras();
-    if (!devices || devices.length === 0) {
-        alert("Kamera tidak dijumpai");
-        return;
-    }
+  reader.style.display = "block";
 
-    // Auto detect kamera belakang
-    const backCamera = devices.find(device =>
-        device.label.toLowerCase().includes("back") ||
-        device.label.toLowerCase().includes("rear")
-    );
-    currentCameraId = backCamera ? backCamera.id : devices[0].id;
+  const html5QrCode = new Html5Qrcode("qr-reader");
+  const config = { fps: 10, qrbox: 250 };
 
-    const config = {
-        fps: 10,
-        qrbox: { width: 250, height: 250 }
-    };
+  html5QrCode.start(
+    { facingMode: "environment" },
+    config,
+    qrMessage => {
 
-    html5QrCode.start(
-        currentCameraId,
-        config,
-        (qrCodeMessage) => {
-            document.getElementById("kodInput").value = qrCodeMessage;
-            stopScanner();
-            semakKod();
-        },
-        (errorMessage) => {
-            // ignore scanning errors
-        }
-    );
-}
+      html5QrCode.stop();
+
+      // Hanya benarkan QR domain rasmi
+      if(qrMessage.startsWith(
+        "https://gadis-hq.github.io/ganjaran/verify.html"
+      )){
+
+        // 🔊 Bunyi beep
+        const audio = new Audio("assets/beep.mp3");
+        audio.play();
+
+        // 🟢 Animasi hijau
+        successBox.style.display = "block";
+        reader.style.display = "none";
+
+        // Delay 1.5 saat sebelum redirect
+        setTimeout(()=>{
+          window.location.href = qrMessage;
+        },1500);
+
+      } else {
+
+        alert("QR tidak sah.");
+
+      }
+
+    },
+    errorMessage => {}
+  ).catch(err=>{
+    alert("Tidak dapat akses kamera.");
+  });
+};
 
 function stopScanner() {
     if (html5QrCode) {
