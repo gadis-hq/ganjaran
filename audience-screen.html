@@ -1,41 +1,44 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audience Screen - GADIS QS HQ</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json">
-
-  <!-- Icon -->
-  <link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="icon/icon-512.png">
+<link rel="stylesheet" href="css/style.css">
 
 <style>
 body{
+  margin:0;
   background:black;
+  overflow:hidden;
   color:white;
   text-align:center;
 }
 
+/* 🔥 Stage Light Animation */
+body::before{
+  content:"";
+  position:fixed;
+  width:200%;
+  height:200%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,215,0,0.3), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255,0,150,0.3), transparent 40%);
+  animation: stageMove 8s infinite alternate;
+  z-index:-1;
+}
+
+@keyframes stageMove{
+  from{transform:translate(-10%,-10%) rotate(0deg);}
+  to{transform:translate(10%,10%) rotate(10deg);}
+}
+
 .winner-name{
-  font-size:70px;
-  font-weight:bold;
-  margin-top:100px;
+  font-size:80px;
+  margin-top:120px;
   text-transform:uppercase;
-  animation: pop3d 1s ease-out;
   text-shadow:
-    2px 2px 0 gold,
-    4px 4px 0 orange,
-    6px 6px 15px rgba(255,215,0,0.7);
+    3px 3px 0 gold,
+    6px 6px 15px rgba(255,215,0,0.8);
+  animation: pop3d 1s ease-out;
 }
 
 .counter{
-  font-size:30px;
+  font-size:35px;
   margin-top:40px;
   color:#00ffcc;
 }
@@ -46,120 +49,13 @@ body{
 }
 </style>
 
-  <h1>🎉 TAHNIAH PEMENANG 🎉</h1>
+<h1>🎉 TAHNIAH PEMENANG 🎉</h1>
 
 <div id="winnerName" class="winner-name"></div>
 <div id="statusMessage"></div>
 <div class="counter">
-  Jumlah Scan Hari Ini: <span id="scanCount">0</span>
-  </div>
-  
-  <!-- JS -->
-  <script src="js/config.js" defer></script>
-  <script src="js/dashboard.js" defer></script>
-  <script src="js/api.js" defer></script>
-  <script src="js/auth.js" defer></script>
-</head>
-<body>
-  <header>
-    <h1>GADIS QS HQ</h1>
-    <p>Audience Screen Ultra Premium</p>
-  </header>
+  Jumlah Scan Global Hari Ini: <span id="scanCount">0</span>
+</div>
 
-  <!-- LED Stage -->
-  <section id="led-stage" class="card-premium">
-    <h2>💡 LED Stage Mode</h2>
-    <div id="led-display">Menunggu animasi...</div>
-  </section>
-
-  <!-- Confetti -->
-  <canvas id="confetti-canvas"></canvas>
-
-  <!-- Live Stats -->
-  <section id="live-stats" class="card-premium">
-    <h2>📊 Live Stats</h2>
-    <div id="stats-content">Loading...</div>
-  </section>
-
-  <!-- Heatmap -->
-  <section id="heatmap" class="card-premium">
-    <h2>🌍 Heatmap Bandar</h2>
-    <div id="heatmap-map" style="height:300px;"></div>
-  </section>
-
-  <!-- Top 5 Bandar -->
-  <section id="top5" class="card-premium">
-    <h2>🏆 Top 5 Bandar</h2>
-    <ol id="top5-list">Loading...</ol>
-  </section>
-
-  <footer>
-    <p>&copy; 2026 GADIS QS HQ</p>
-  </footer>
-
-  <!-- JS Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script type="module" src="js/audience.js"></script>
-
-  <script>
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(reg => console.log('Service Worker registered:', reg.scope))
-          .catch(err => console.log('Service Worker failed:', err));
-      });
-    }
-
-    // Confetti function
-    function triggerConfetti() {
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#ff99cc','#d4af37','#fff0f5']
-      });
-    }
-
-    // Badge warna
-    function createStatusBadge(status) {
-      const badge = document.createElement('span');
-      badge.classList.add('btn-premium');
-      if(status === 'TELAH DITEBUS') badge.style.backgroundColor = '#d4af37';
-      else if(status === 'BELUM DITEBUS') badge.style.backgroundColor = '#28a745';
-      else badge.style.backgroundColor = '#dc3545';
-      badge.innerText = status;
-      return badge;
-    }
-
-    // Simulasi live update
-    document.addEventListener('DOMContentLoaded', () => {
-      // Live Stats
-      const stats = document.getElementById('stats-content');
-      stats.innerHTML = `
-        <p>Jumlah Kod Sah: 120</p>
-        <p>Jumlah Kod Telah Ditebus: 85</p>
-        <p>Jumlah Kod Belum Ditebus: 35</p>
-      `;
-
-      // Top 5 Bandar
-      const top5List = document.getElementById('top5-list');
-      const top5 = ['Kuala Lumpur','Johor Bahru','Penang','Ipoh','Kota Bharu'];
-      top5List.innerHTML = '';
-      top5.forEach(b => {
-        const li = document.createElement('li');
-        li.innerText = b;
-        top5List.appendChild(li);
-      });
-
-      // Heatmap placeholder
-      const map = document.getElementById('heatmap-map');
-      map.innerHTML = '<p style="text-align:center; padding-top:120px;">[Heatmap Bandar akan dipaparkan di sini]</p>';
-
-      // LED Stage placeholder
-      const led = document.getElementById('led-display');
-      led.innerHTML = '<p style="text-align:center;">Animasi LED aktif</p>';
-    });
-  </script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script type="module" src="js/audience.js"></script>
