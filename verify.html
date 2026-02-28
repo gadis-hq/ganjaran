@@ -38,5 +38,32 @@ if(data.status==="AKTIF_BELUM_DITEBUS"){
 });
 </script>
 
+  <script type="module">
+import { CONFIG } from "./js/config.js";
+import { callAPI } from "./js/api.js";
+
+const p = new URLSearchParams(window.location.search);
+const code = p.get("code");
+const token = p.get("token");
+
+callAPI(`?mode=verify&code=${code}&token=${token}`)
+.then(data=>{
+
+  if(!data.success){
+    document.getElementById("result")
+    .innerHTML="<div class='error'>Tidak Sah</div>";
+    return;
+  }
+
+  // Simpan untuk audience screen
+  localStorage.setItem("winnerData", JSON.stringify(data));
+
+  setTimeout(()=>{
+    window.location.href="audience-screen.html";
+  },1000);
+
+});
+</script> 
+
 </body>
 </html>
