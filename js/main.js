@@ -20,13 +20,13 @@ if(!data.success){
  return;
 }
 
-if(data.status==="TELAH_DITEBUS"){
+if(data.status_penebusan==="TELAH DITEBUS"){
  document.getElementById("result").innerHTML =
  "<b style='color:green'>TELAH DITEBUS</b>";
  generateQR(kod);
 }
 
-if(data.status==="AKTIF_BELUM_DITEBUS"){
+if(data.status_penebusan==="AKTIF BELUM DITEBUS"){
  document.getElementById("result").innerHTML =
  "<b style='color:orange'>AKTIF</b>";
  generateQR(kod);
