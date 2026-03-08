@@ -1,4 +1,4 @@
-const WEB_APP = "WEB_APP_URL_PUAN";
+const WEB_APP = "https://script.google.com/macros/s/AKfycbzjsqsRYkvvV2NGaAGjEkpyfLBKbmyI_UPZJmwT178cq31Kj2bukqAsU6d06Bs4Qocw/exec";
 const SECRET_KEY = "GADIS_SECRET_KEY";
 
 /* ===========================
