@@ -14,7 +14,7 @@ const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 const token = params.get("token");
 
-fetch("WEB_APP_URL_PUAN?mode=verify&code="+code+"&token="+token)
+fetch("https://script.google.com/macros/s/AKfycby6m-F4D2RN7C8l2e7n_gZuvOrBeAkDhIlu6s5LCS_kDp3QWl9_iQw_1xdZ1srMVuQL/exec?mode=verify&code="+code+"&token="+token)
 .then(res=>res.json())
 .then(data=>{
 
@@ -24,13 +24,13 @@ if(!data.success){
   return;
 }
 
-if(data.status==="TELAH_DITEBUS"){
+if(data.status_penebusan==="TELAH DITEBUS"){
   document.getElementById("result").innerHTML =
   "<b style='color:green'>SAH & TELAH DITEBUS</b><br>"+
   data.nama+"<br>"+data.negeri;
 }
 
-if(data.status==="AKTIF_BELUM_DITEBUS"){
+if(data.status_penebusan==="AKTIF BELUM DITEBUS"){
   document.getElementById("result").innerHTML =
   "<b style='color:orange'>SAH & MASIH AKTIF</b>";
 }
